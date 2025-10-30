@@ -7,10 +7,10 @@ import TodoList from '@/components/TodoList';
 import TodoStats from '@/components/TodoStats';
 
 export default function Home() {
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [apiStatus, setApiStatus] = useState('checking');
+  const [todos, setTodos] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [apiStatus, setApiStatus] = useState<'checking' | 'healthy' | 'unhealthy'>('checking');
 
   useEffect(() => {
     checkHealth();
@@ -31,7 +31,7 @@ export default function Home() {
     try {
       setLoading(true);
       const data = await todoAPI.getTodos();
-      setTodos(data.data || []);
+      setTodos((data as any).data || []);
       setError(null);
     } catch (err) {
       setError('Failed to load todos. Please try again.');
@@ -40,7 +40,7 @@ export default function Home() {
     }
   };
 
-  const handleAdd = async (todo) => {
+  const handleAdd = async (todo: { title: string; description?: string }) => {
     try {
       await todoAPI.createTodo(todo);
       await loadTodos();
@@ -49,7 +49,7 @@ export default function Home() {
       throw err;
     }
   };
-  const handleUpdate = async (id, updates) => {
+  const handleUpdate = async (id: string, updates: Record<string, unknown>) => {
     try {
       await todoAPI.updateTodo(id, updates);
       await loadTodos();
@@ -58,7 +58,7 @@ export default function Home() {
       throw err;
     }
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     try {
       await todoAPI.deleteTodo(id);
       await loadTodos();
@@ -115,10 +115,10 @@ export default function Home() {
         {/* Add Todo Form */}
         <AddTodo onAdd={handleAdd} loading={loading} />
         {/* Statistics */}
-        <TodoStats todos={todos} />
+        <TodoStats todos={todos as any[]} />
         {/* Todo List */}
         <TodoList
-          todos={todos}
+          todos={todos as any[]}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
           loading={loading}
