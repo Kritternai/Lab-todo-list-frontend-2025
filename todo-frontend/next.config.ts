@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
-const repoName = 'todo-frontend';
 const isProd = process.env.NODE_ENV === 'production';
+
+// Determine repo name for GitHub Pages base path
+// Priority: NEXT_PUBLIC_BASE_PATH (may include leading slash) -> GITHUB_REPOSITORY (owner/repo) -> fallback
+const envBase = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const repoFromEnv = envBase.replace(/^\//, '').trim();
+const repoFromGitHub = (process.env.GITHUB_REPOSITORY || '').split('/')[1];
+const repoName = repoFromEnv || repoFromGitHub || 'Lab-todo-list-frontend-2025';
 
 const BACKEND_API = 'https://flask-todo-app-ci0o.onrender.com/api';
 
@@ -14,13 +20,7 @@ const nextConfig = {
   trailingSlash: true,
   async rewrites() {
     if (isProd) return [];
-    // Dev-only proxy to avoid CORS: /api/* -> BACKEND_API
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${BACKEND_API}/:path*`,
-      },
-    ];
+    return [];
   },
 };
 

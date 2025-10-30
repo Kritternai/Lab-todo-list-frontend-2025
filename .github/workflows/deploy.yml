@@ -46,8 +46,9 @@ jobs:
 
       - name: Build Next.js app
         env:
-          NEXT_PUBLIC_API_URL: /api
           NODE_ENV: production
+          # Set base path to current repository name to fix 404 under GitHub Pages
+          NEXT_PUBLIC_BASE_PATH: Lab-todo-list-frontend-2025
         run: |
           npm run build
           echo "Ensure .nojekyll at out root"
