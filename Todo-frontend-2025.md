@@ -1199,9 +1199,7 @@ https://your-username.github.io/todo-frontend/
 
 ---
 ## บันทึกรูปผลการรันหน้า Front-end
-```bash
-# บันทึกรูปผลการรันหน้า Front-end ที่นี่
-```
+![alt text](<Screenshot 2568-10-31 at 05.10.21.png>)
 
 ## ส่วนที่ 11: Troubleshooting
 
@@ -1426,8 +1424,6 @@ todo-frontend/
 
 ## สรุป
 **URL ของนักศึกษาคือ**:
-- Frontend: `https://your-username.github.io/todo-frontend/`
-- Backend: `https://your-backend.onrender.com`
-
+- Frontend: `https://kritternai.github.io/Lab-todo-list-frontend-2025/`
 ---
 
