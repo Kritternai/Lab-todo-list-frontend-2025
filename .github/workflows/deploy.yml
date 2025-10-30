@@ -46,13 +46,18 @@ jobs:
 
       - name: Build Next.js app
         env:
-          NEXT_PUBLIC_API_URL: https://flask-todo-app-ci0o.onrender.com/api
+          NEXT_PUBLIC_API_URL: /api
           NODE_ENV: production
         run: |
           npm run build
-          ls -la out/ || true
-          echo "Checking for CSS files..."
-          find out -name "*.css" | head -5 || true
+          echo "Ensure .nojekyll at out root"
+          touch out/.nojekyll
+          echo "List out root"
+          ls -la out/
+          echo "List out/_next"
+          ls -la out/_next || true
+          echo "List out/_next/static"
+          ls -la out/_next/static || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

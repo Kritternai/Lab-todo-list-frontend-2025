@@ -41,8 +41,13 @@ jobs:
           NODE_ENV: production
         run: |
           npm run build
-          ls -la
-          ls -la out || true
+          touch out/.nojekyll
+          echo "List out root"
+          ls -la out/
+          echo "List out/_next"
+          ls -la out/_next || true
+          echo "List out/_next/static"
+          ls -la out/_next/static || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

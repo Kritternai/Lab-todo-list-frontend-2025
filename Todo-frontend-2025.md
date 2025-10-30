@@ -1170,9 +1170,7 @@ git push origin main
 
 
 ## บันทึกรูปผลการ Deploy
-```bash
-# บันทึกรูปผลการ Deploy ที่นี่
-```
+![alt text](<Screenshot 2568-10-31 at 05.03.41.png>)
 
 ### ขั้นตอนที่ 10.3: หา URL ของ Website
 
