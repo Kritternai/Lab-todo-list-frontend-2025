@@ -6,11 +6,23 @@ import AddTodo from '@/components/AddTodo';
 import TodoList from '@/components/TodoList';
 import TodoStats from '@/components/TodoStats';
 
+type Todo = {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  created_at: number;
+};
+
+type ApiListResponse = { data: Todo[] };
+
+type ApiStatus = 'checking' | 'healthy' | 'unhealthy';
+
 export default function Home() {
-  const [todos, setTodos] = useState<any[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [apiStatus, setApiStatus] = useState<'checking' | 'healthy' | 'unhealthy'>('checking');
+  const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
 
   useEffect(() => {
     checkHealth();
@@ -21,7 +33,7 @@ export default function Home() {
     try {
       await todoAPI.healthCheck();
       setApiStatus('healthy');
-    } catch (err) {
+    } catch {
       setApiStatus('unhealthy');
       setError('Cannot connect to API. Please check if the backend is running.');
     }
@@ -30,10 +42,10 @@ export default function Home() {
   const loadTodos = async () => {
     try {
       setLoading(true);
-      const data = await todoAPI.getTodos();
-      setTodos((data as any).data || []);
+      const data = (await todoAPI.getTodos()) as unknown as ApiListResponse;
+      setTodos(data.data || []);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to load todos. Please try again.');
     } finally {
       setLoading(false);
@@ -44,27 +56,29 @@ export default function Home() {
     try {
       await todoAPI.createTodo(todo);
       await loadTodos();
-    } catch (err) {
+    } catch {
       alert('Failed to add todo. Please try again.');
-      throw err;
+      throw new Error('Add failed');
     }
   };
-  const handleUpdate = async (id: string, updates: Record<string, unknown>) => {
+
+  const handleUpdate = async (id: string, updates: Partial<Todo>) => {
     try {
       await todoAPI.updateTodo(id, updates);
       await loadTodos();
-    } catch (err) {
+    } catch {
       alert('Failed to update todo. Please try again.');
-      throw err;
+      throw new Error('Update failed');
     }
   };
+
   const handleDelete = async (id: string) => {
     try {
       await todoAPI.deleteTodo(id);
       await loadTodos();
-    } catch (err) {
+    } catch {
       alert('Failed to delete todo. Please try again.');
-      throw err;
+      throw new Error('Delete failed');
     }
   };
 
@@ -115,10 +129,10 @@ export default function Home() {
         {/* Add Todo Form */}
         <AddTodo onAdd={handleAdd} loading={loading} />
         {/* Statistics */}
-        <TodoStats todos={todos as any[]} />
+        <TodoStats todos={todos} />
         {/* Todo List */}
         <TodoList
-          todos={todos as any[]}
+          todos={todos}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
           loading={loading}
